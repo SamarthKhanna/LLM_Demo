@@ -3,9 +3,6 @@ from typing import List, Tuple, Dict
 import pandas as pd
 import re
 from dataclasses import dataclass, field
-import csv
-import os
-
 from components import GeminiLLM, GroqLLM, GroqConfig, GeminiConfig, PromptGenerator
 
 # -------------------------------------------------------------------
@@ -59,8 +56,8 @@ def parse_mcq_answer(raw_text: str) -> List[str]:
     Returns a list of option labels (e.g., ["A", "B"]) or [] for none.
     """
     try:
-        answer_part = raw_text.split("<answer>")[1].split("</answer>")[0]
-    except Exception:
+        answer_part = raw_text.split('<answer>')[1].split('</answer>')[0]
+    except:
         raise ValueError("Error while parsing answer, returned text:", raw_text)
 
     # Split on commas and clean up
@@ -92,7 +89,7 @@ def parse_json_response(raw_text: str) -> Dict:
                 pass
         # If all fails, return empty
         return {}
-
+    
 
 @dataclass
 class SimulatedParticipant:
@@ -103,158 +100,6 @@ class SimulatedParticipant:
     """
     id: str
     history: List[Tuple[str, str]] = field(default_factory=list)
-
-
-# -------------------------------------------------------------------
-# Logging helpers
-# -------------------------------------------------------------------
-
-MCQ_LOG_PATH = "mcq_results.csv"
-JSON_LOG_PATH = "json_results.csv"
-
-
-def init_logs(mcq_path: str = MCQ_LOG_PATH, json_path: str = JSON_LOG_PATH) -> None:
-    """
-    Initialize / overwrite the log files with headers.
-    Call this once at the start of your script.
-    """
-    if os.path.dirname(mcq_path):
-        os.makedirs(os.path.dirname(mcq_path), exist_ok=True)
-    if os.path.dirname(json_path):
-        os.makedirs(os.path.dirname(json_path), exist_ok=True)
-
-    # MCQ log
-    with open(mcq_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow([
-            "run_type",          # "independent" or "with_memory"
-            "model_name",
-            "participant_id",    # e.g., worker_1, or "NA" for independent
-            "example_idx",       # which row of the CSV
-            "prompt",
-            "raw_response",
-            "selected_labels",   # e.g., "A,B"
-            "selected_names",    # e.g., "Alice,Bob"
-        ])
-
-    # JSON log
-    with open(json_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow([
-            "run_type",
-            "model_name",
-            "participant_id",
-            "example_idx",
-            "employee_label",    # A/B/C/D
-            "employee_name",
-            "recommended_raise_percent",
-            "prompt",
-            "raw_response",
-        ])
-
-
-def extract_employee_name(description: str) -> str:
-    """
-    Given a description like 'Alice – consistently exceeds targets...',
-    return 'Alice'.
-
-    We handle different dash types heuristically.
-    """
-    if not isinstance(description, str):
-        return str(description)
-    text = description.strip()
-
-    # Try split on en-dash / em-dash / hyphen
-    for sep in ["–", "—", "-"]:
-        if sep in text:
-            return text.split(sep, 1)[0].strip()
-
-    # Fallback: take first word
-    return text.split()[0] if text else ""
-
-
-def log_mcq_result(
-    mcq_path: str,
-    run_type: str,
-    llm,
-    participant_id: str,
-    example_idx: int,
-    prompt: str,
-    raw_response: str,
-    employees: Dict[str, str],
-    parsed_labels: List[str],
-) -> None:
-    """
-    Log a single MCQ result.
-    """
-    model_name = getattr(getattr(llm, "config", None), "model_name", "unknown_model")
-
-    selected_names = []
-    for label in parsed_labels:
-        desc = employees.get(label, "")
-        selected_names.append(extract_employee_name(desc))
-
-    with open(mcq_path, "a", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow([
-            run_type,
-            model_name,
-            participant_id,
-            example_idx,
-            prompt,
-            raw_response,
-            ",".join(parsed_labels),
-            ",".join(selected_names),
-        ])
-
-
-def log_json_result(
-    json_path: str,
-    run_type: str,
-    llm,
-    participant_id: str,
-    example_idx: int,
-    prompt: str,
-    raw_response: str,
-    employees: Dict[str, str],
-    parsed_json: Dict,
-) -> None:
-    """
-    Log raises from a JSON response.
-    For each employee A–D in the question, we store the recommended raise percent.
-
-    parsed_json is expected to have the form:
-      {"employees": [{"id": "A", "recommended_raise_percent": 5.0, ...}, ...]}
-    """
-    model_name = getattr(getattr(llm, "config", None), "model_name", "unknown_model")
-
-    # Build a map id -> raise_percent from parsed JSON
-    raise_map = {}
-    if isinstance(parsed_json, dict):
-        for item in parsed_json.get("employees", []):
-            if not isinstance(item, dict):
-                continue
-            emp_id = item.get("id")
-            if not emp_id:
-                continue
-            raise_map[emp_id] = item.get("recommended_raise_percent")
-
-    with open(json_path, "a", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        for label, desc in employees.items():
-            name = extract_employee_name(desc)
-            raise_pct = raise_map.get(label)  # None if not present in JSON
-            writer.writerow([
-                run_type,
-                model_name,
-                participant_id,
-                example_idx,
-                label,
-                name,
-                raise_pct,
-                prompt,
-                raw_response,
-            ])
 
 
 # -------------------------------------------------------------------
@@ -314,7 +159,7 @@ def call_mcq_once(
         except Exception as e:
             if i == 2:
                 raise e
-            print(f"Retrying MCQ call due to error: {e}")
+            print(f"Retrying free-flow call due to error: {e}")
 
     if history is not None:
         history.append(("user", mcq_prompt))
@@ -346,7 +191,7 @@ def call_json_once(
         except Exception as e:
             if i == 2:
                 raise e
-            print(f"Retrying JSON call due to error: {e}")
+            print(f"Retrying free-flow call due to error: {e}")
 
     if history is not None:
         history.append(("user", json_prompt))
@@ -360,12 +205,7 @@ def call_json_once(
 # Updated experiment functions
 # -------------------------------------------------------------------
 
-def run_independent_sampling(
-    llm,
-    examples: List[Dict[str, str]],
-    mcq_log_path: str = MCQ_LOG_PATH,
-    json_log_path: str = JSON_LOG_PATH,
-):
+def run_independent_sampling(llm, examples: List[Dict[str, str]]):
     """
     Independent sampling:
       - Free-flow question is asked once (no history).
@@ -373,9 +213,26 @@ def run_independent_sampling(
           * Ask MCQ (no history).
           * Ask JSON (no history).
       - No chat history is used anywhere.
-      - MCQ + JSON results are logged to CSV files.
     """
     prompt_gen = PromptGenerator()
+
+    # 1) Free-flow criteria ONCE, with no history
+    print("\n==============================")
+    print("Free-flow criteria (no history)")
+    print("==============================\n")
+
+    try:
+        free_prompt, free_raw, free_thoughts = call_free_flow_once(
+            llm, prompt_gen, history=None
+        )
+    except Exception as e:
+        print(f"Error during free-flow call: {e}")
+        return
+
+    print("Free-flow prompt:\n", free_prompt)
+    print("Model response (free-flow):\n", free_raw)
+    print("Thoughts:", free_thoughts)
+    print()
 
     # 2) For each example, MCQ + JSON with NO history
     for idx, employees in enumerate(examples, start=1):
@@ -391,28 +248,11 @@ def run_independent_sampling(
         except Exception as e:
             print(f"Error during MCQ call for example {idx}: {e}")
             continue
-
         print("MCQ prompt:\n", mcq_prompt)
         print("MCQ raw response:", mcq_raw)
         print("MCQ thoughts:", mcq_thoughts)
         print("MCQ parsed answer:", mcq_parsed)
         print()
-
-        # Log MCQ
-        try:
-            log_mcq_result(
-                mcq_log_path,
-                run_type="independent",
-                llm=llm,
-                participant_id="NA",
-                example_idx=idx,
-                prompt=mcq_prompt,
-                raw_response=mcq_raw,
-                employees=employees,
-                parsed_labels=mcq_parsed,
-            )
-        except Exception as e:
-            print(f"Error logging MCQ result for example {idx}: {e}")
 
         # JSON (no history)
         try:
@@ -422,37 +262,14 @@ def run_independent_sampling(
         except Exception as e:
             print(f"Error during JSON call for example {idx}: {e}")
             continue
-
         print("JSON prompt:\n", json_prompt)
         print("JSON raw response:", json_raw)
         print("JSON thoughts:", json_thoughts)
         print("JSON parsed object:", json.dumps(json_parsed, indent=2))
         print()
 
-        # Log JSON
-        try:
-            log_json_result(
-                json_log_path,
-                run_type="independent",
-                llm=llm,
-                participant_id="NA",
-                example_idx=idx,
-                prompt=json_prompt,
-                raw_response=json_raw,
-                employees=employees,
-                parsed_json=json_parsed,
-            )
-        except Exception as e:
-            print(f"Error logging JSON result for example {idx}: {e}")
 
-
-def run_sampling_with_memory(
-    llm,
-    examples: List[Dict[str, str]],
-    num_participants: int = 3,
-    mcq_log_path: str = MCQ_LOG_PATH,
-    json_log_path: str = JSON_LOG_PATH,
-):
+def run_sampling_with_memory(llm, examples: List[Dict[str, str]], num_participants: int = 3):
     """
     Sampling with memory:
       - Simulate `num_participants` users.
@@ -462,7 +279,6 @@ def run_sampling_with_memory(
           * Ask free-flow (with history).
           * Ask JSON (with history).
       - The history accumulates across BOTH examples and questions.
-      - MCQ + JSON results are logged to CSV.
     """
     prompt_gen = PromptGenerator()
 
@@ -486,28 +302,11 @@ def run_sampling_with_memory(
             except Exception as e:
                 print(f"Error during MCQ call for {participant.id}, example {idx}: {e}")
                 continue
-
             print("[Q1] MCQ prompt:\n", mcq_prompt)
             print("[Q1] MCQ raw:", mcq_raw)
             print("[Q1] MCQ thoughts:", mcq_thoughts)
             print("[Q1] MCQ parsed:", mcq_parsed)
             print()
-
-            # Log MCQ
-            try:
-                log_mcq_result(
-                    mcq_log_path,
-                    run_type="with_memory",
-                    llm=llm,
-                    participant_id=participant.id,
-                    example_idx=idx,
-                    prompt=mcq_prompt,
-                    raw_response=mcq_raw,
-                    employees=employees,
-                    parsed_labels=mcq_parsed,
-                )
-            except Exception as e:
-                print(f"Error logging MCQ result for {participant.id}, example {idx}: {e}")
 
             # Q2: Free-flow with memory
             try:
@@ -517,7 +316,6 @@ def run_sampling_with_memory(
             except Exception as e:
                 print(f"Error during free-flow call for {participant.id}, example {idx}: {e}")
                 continue
-
             print("[Q2] Free-flow prompt:\n", free_prompt)
             print("[Q2] Free-flow answer (truncated):", free_raw[:200], "...")
             print("[Q2] Free-flow thoughts:", free_thoughts)
@@ -531,28 +329,11 @@ def run_sampling_with_memory(
             except Exception as e:
                 print(f"Error during JSON call for {participant.id}, example {idx}: {e}")
                 continue
-
             print("[Q3] JSON prompt:\n", json_prompt)
             print("[Q3] JSON raw:", json_raw)
             print("[Q3] JSON parsed:", json.dumps(json_parsed, indent=2))
             print("[Q3] JSON thoughts:", json_thoughts)
             print()
-
-            # Log JSON
-            try:
-                log_json_result(
-                    json_log_path,
-                    run_type="with_memory",
-                    llm=llm,
-                    participant_id=participant.id,
-                    example_idx=idx,
-                    prompt=json_prompt,
-                    raw_response=json_raw,
-                    employees=employees,
-                    parsed_json=json_parsed,
-                )
-            except Exception as e:
-                print(f"Error logging JSON result for {participant.id}, example {idx}: {e}")
 
 
 # -------------------------------------------------------------------
@@ -571,9 +352,6 @@ if __name__ == "__main__":
 
     # Slice the first N examples (you could random.sample instead if you prefer)
     examples_to_use = all_examples[:NUM_EXAMPLES_TO_RUN]
-
-    # Initialize log files
-    init_logs(mcq_path=MCQ_LOG_PATH, json_path=JSON_LOG_PATH)
 
     # ----------------------------------------------------------------
     # GEMINI RUN (optional)
@@ -605,7 +383,7 @@ if __name__ == "__main__":
     config = GroqConfig(
         model_name="qwen/qwen3-32b",
         temperature=0.4,
-        max_output_tokens=1024,
+        max_completion_tokens=1024,
         reasoning_format="parsed",
         reasoning_effort=None,
         # include_reasoning=True,  # if you prefer that mode

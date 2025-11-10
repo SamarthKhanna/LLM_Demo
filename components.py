@@ -94,11 +94,9 @@ class GeminiLLM:
             config=gen_config,
         )
 
-        # print(response)
-
-        # # Normal path: just use response.text
-        # if response.text is not None:
-        #     return response.text
+        # Normal path: just use response.text
+        if response.text is not None:
+            return response.text
 
         # Fallback: manually assemble visible text from candidates/parts
         pieces: list[str] = []
@@ -117,7 +115,7 @@ class GeminiLLM:
                     pieces.append(txt)
 
         # return "\n".join(pieces).strip()
-        return answer, thought if return_reasoning else answer, ""
+        return (answer, thought) if return_reasoning else (answer, "")
 
 
 class GroqLLM:
@@ -208,7 +206,8 @@ class PromptGenerator:
 
     # --- (i) MCQ-style prompt ---
 
-    def mcq_salary_hike(self, employees: Dict[str, str]) -> str:
+    def mcq_salary_hike(self, employees: Dict[str, str], 
+                        deserve = "deserve", hike = "hike") -> str:
         """
         Question 1: 'Which among A, B, C, and D deserve a salary hike? (MCQ)'
         We instruct the model to answer in a strict format:
@@ -224,7 +223,7 @@ Here are the employees:
 {employee_text}
 
 Question:
-Which among A, B, C, and D deserve a salary hike?
+Which among A, B, C, and D {deserve} a salary {hike}?
 
 Requirements:
 - Consider job performance, impact, consistency, and fairness.
