@@ -5,17 +5,17 @@ from dataclasses import dataclass
 from typing import List, Tuple, Optional, Dict, Any
 
 from google import genai
-from google.genai import types  # helper types from the SDK
+from google.genai import types  # helper types from the SDK - https://cloud.google.com/vertex-ai/generative-ai/docs/reference/rest/v1beta1/Content
 from groq import Groq
 
 # ---------- LLM wrapper ----------
 
 @dataclass
 class GeminiConfig:
-    model_name: str = "gemini-2.5-pro"  # fast, cheap; change to a slower "pro" model if you like
+    model_name: str = "gemini-2.5-flash"  # fast, cheap; change to a slower "pro" model if you like
     temperature: float = 0.4
     max_output_tokens: int | None = 2048  # or None to let the API decide
-    # NEW: thinking-related options
+    # Thinking-related options
     thinking_budget: int | None = 512     # e.g., 512 tokens for internal reasoning
     include_thoughts: bool = True        # keep False for teaching (no chain-of-thought in output)
 
@@ -33,9 +33,7 @@ class GroqConfig:
 
 class GeminiLLM:
     """
-    Generic LLM wrapper around Google's Gemini API.
-    For this demo it only supports a single provider, but the interface
-    can be reused to plug in other APIs later.
+    Wrapper around Google's Gemini API.
     """
 
     def __init__(self, config: Optional[GeminiConfig] = None, api_key: Optional[str] = None):
@@ -48,7 +46,6 @@ class GeminiLLM:
                 "No API key found. Set GEMINI_API_KEY env var or pass api_key to LLM()."
             )
 
-        # Create client (Gemini Developer API) :contentReference[oaicite:1]{index=1}
         self.client = genai.Client(api_key=api_key)
 
     def generate(self, prompt: str, history=None, return_reasoning = True) -> str:

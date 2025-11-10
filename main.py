@@ -223,8 +223,8 @@ if __name__ == "__main__":
     
 
     # For teaching, you can toggle these:
-    # print("Running single-model experiment:\n")
-    # run_single_model_experiment(llm)
+    print("Running single-model experiment:\n")
+    run_single_model_experiment(llm)
 
-    print("\n\nRunning multi-participant chat-history demo:\n")
-    run_chat_history_demo(llm, num_participants=2)
+    # print("\n\nRunning multi-participant chat-history demo:\n")
+    # run_chat_history_demo(llm, num_participants=2)
