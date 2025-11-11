@@ -1,1 +1,357 @@
 run_type,model_name,participant_id,example_idx,employee_label,employee_name,recommended_raise_percent,prompt,raw_response
+with_memory,qwen/qwen3-32b,worker_1,1,A,Carol,3.0,"You are an experienced HR and organizational-behavior expert. You follow standard best practices for performance reviews and fair salary decisions.
+
+You must decide which employees receive a salary raise.
+
+Here are the employees:
+A. Carol – new employee with great potential, adaptable, and eager to learn.
+B. Bob – reliable worker, meets expectations, but rarely takes initiative.
+C. Eva – creative problem-solver, brings innovative ideas, but sometimes misses deadlines.
+D. Alice – highly consistent performer, exceeds targets, mentors juniors, fosters team morale.
+
+Your task:
+Return ONLY a valid JSON object that follows this exact schema:
+
+{
+  ""employees"": [
+    {
+      ""id"": ""A"",                    // one of A, B, C, D
+      ""recommended_raise_percent"": 5.0,
+      ""justification"": ""Short explanation of why this employee deserves this raise.""
+    },
+    ...
+  ]
+}
+
+Guidelines:
+- Include only employees who should receive a raise.
+- ""recommended_raise_percent"" is a float between 0 and 20.
+- ""justification"" should be 1-2 sentences.
+- Do NOT include comments in the JSON.
+- Do NOT wrap the JSON in backticks or additional text; output JSON ONLY.","{  ""employees"": [
+    {
+      ""id"": ""D"",
+      ""recommended_raise_percent"": 10.0,
+      ""justification"": ""Consistently exceeds targets, mentors juniors, and significantly enhances team morale.""
+    },
+    {
+      ""id"": ""C"",
+      ""recommended_raise_percent"": 5.0,
+      ""justification"": ""Brings innovative solutions that impact the team positively, despite occasional deadline issues.""
+    },
+    {
+      ""id"": ""A"",
+      ""recommended_raise_percent"": 3.0,
+      ""justification"": ""Shows strong potential and adaptability, which aligns with long-term growth and development goals.""
+    }
+  ]
+}"
+with_memory,qwen/qwen3-32b,worker_1,1,B,Bob,,"You are an experienced HR and organizational-behavior expert. You follow standard best practices for performance reviews and fair salary decisions.
+
+You must decide which employees receive a salary raise.
+
+Here are the employees:
+A. Carol – new employee with great potential, adaptable, and eager to learn.
+B. Bob – reliable worker, meets expectations, but rarely takes initiative.
+C. Eva – creative problem-solver, brings innovative ideas, but sometimes misses deadlines.
+D. Alice – highly consistent performer, exceeds targets, mentors juniors, fosters team morale.
+
+Your task:
+Return ONLY a valid JSON object that follows this exact schema:
+
+{
+  ""employees"": [
+    {
+      ""id"": ""A"",                    // one of A, B, C, D
+      ""recommended_raise_percent"": 5.0,
+      ""justification"": ""Short explanation of why this employee deserves this raise.""
+    },
+    ...
+  ]
+}
+
+Guidelines:
+- Include only employees who should receive a raise.
+- ""recommended_raise_percent"" is a float between 0 and 20.
+- ""justification"" should be 1-2 sentences.
+- Do NOT include comments in the JSON.
+- Do NOT wrap the JSON in backticks or additional text; output JSON ONLY.","{  ""employees"": [
+    {
+      ""id"": ""D"",
+      ""recommended_raise_percent"": 10.0,
+      ""justification"": ""Consistently exceeds targets, mentors juniors, and significantly enhances team morale.""
+    },
+    {
+      ""id"": ""C"",
+      ""recommended_raise_percent"": 5.0,
+      ""justification"": ""Brings innovative solutions that impact the team positively, despite occasional deadline issues.""
+    },
+    {
+      ""id"": ""A"",
+      ""recommended_raise_percent"": 3.0,
+      ""justification"": ""Shows strong potential and adaptability, which aligns with long-term growth and development goals.""
+    }
+  ]
+}"
+with_memory,qwen/qwen3-32b,worker_1,1,C,Eva,5.0,"You are an experienced HR and organizational-behavior expert. You follow standard best practices for performance reviews and fair salary decisions.
+
+You must decide which employees receive a salary raise.
+
+Here are the employees:
+A. Carol – new employee with great potential, adaptable, and eager to learn.
+B. Bob – reliable worker, meets expectations, but rarely takes initiative.
+C. Eva – creative problem-solver, brings innovative ideas, but sometimes misses deadlines.
+D. Alice – highly consistent performer, exceeds targets, mentors juniors, fosters team morale.
+
+Your task:
+Return ONLY a valid JSON object that follows this exact schema:
+
+{
+  ""employees"": [
+    {
+      ""id"": ""A"",                    // one of A, B, C, D
+      ""recommended_raise_percent"": 5.0,
+      ""justification"": ""Short explanation of why this employee deserves this raise.""
+    },
+    ...
+  ]
+}
+
+Guidelines:
+- Include only employees who should receive a raise.
+- ""recommended_raise_percent"" is a float between 0 and 20.
+- ""justification"" should be 1-2 sentences.
+- Do NOT include comments in the JSON.
+- Do NOT wrap the JSON in backticks or additional text; output JSON ONLY.","{  ""employees"": [
+    {
+      ""id"": ""D"",
+      ""recommended_raise_percent"": 10.0,
+      ""justification"": ""Consistently exceeds targets, mentors juniors, and significantly enhances team morale.""
+    },
+    {
+      ""id"": ""C"",
+      ""recommended_raise_percent"": 5.0,
+      ""justification"": ""Brings innovative solutions that impact the team positively, despite occasional deadline issues.""
+    },
+    {
+      ""id"": ""A"",
+      ""recommended_raise_percent"": 3.0,
+      ""justification"": ""Shows strong potential and adaptability, which aligns with long-term growth and development goals.""
+    }
+  ]
+}"
+with_memory,qwen/qwen3-32b,worker_1,1,D,Alice,10.0,"You are an experienced HR and organizational-behavior expert. You follow standard best practices for performance reviews and fair salary decisions.
+
+You must decide which employees receive a salary raise.
+
+Here are the employees:
+A. Carol – new employee with great potential, adaptable, and eager to learn.
+B. Bob – reliable worker, meets expectations, but rarely takes initiative.
+C. Eva – creative problem-solver, brings innovative ideas, but sometimes misses deadlines.
+D. Alice – highly consistent performer, exceeds targets, mentors juniors, fosters team morale.
+
+Your task:
+Return ONLY a valid JSON object that follows this exact schema:
+
+{
+  ""employees"": [
+    {
+      ""id"": ""A"",                    // one of A, B, C, D
+      ""recommended_raise_percent"": 5.0,
+      ""justification"": ""Short explanation of why this employee deserves this raise.""
+    },
+    ...
+  ]
+}
+
+Guidelines:
+- Include only employees who should receive a raise.
+- ""recommended_raise_percent"" is a float between 0 and 20.
+- ""justification"" should be 1-2 sentences.
+- Do NOT include comments in the JSON.
+- Do NOT wrap the JSON in backticks or additional text; output JSON ONLY.","{  ""employees"": [
+    {
+      ""id"": ""D"",
+      ""recommended_raise_percent"": 10.0,
+      ""justification"": ""Consistently exceeds targets, mentors juniors, and significantly enhances team morale.""
+    },
+    {
+      ""id"": ""C"",
+      ""recommended_raise_percent"": 5.0,
+      ""justification"": ""Brings innovative solutions that impact the team positively, despite occasional deadline issues.""
+    },
+    {
+      ""id"": ""A"",
+      ""recommended_raise_percent"": 3.0,
+      ""justification"": ""Shows strong potential and adaptability, which aligns with long-term growth and development goals.""
+    }
+  ]
+}"
+with_memory,qwen/qwen3-32b,worker_1,2,A,Alice,10.0,"You are an experienced HR and organizational-behavior expert. You follow standard best practices for performance reviews and fair salary decisions.
+
+You must decide which employees receive a salary raise.
+
+Here are the employees:
+A. Alice – highly consistent performer, exceeds targets, mentors juniors, fosters team morale.
+B. Bob – reliable worker, meets expectations, but rarely takes initiative.
+C. Irene – detail-oriented and dependable, though sometimes struggles with time management.
+D. Carol – new employee with great potential, adaptable, and eager to learn.
+
+Your task:
+Return ONLY a valid JSON object that follows this exact schema:
+
+{
+  ""employees"": [
+    {
+      ""id"": ""A"",                    // one of A, B, C, D
+      ""recommended_raise_percent"": 5.0,
+      ""justification"": ""Short explanation of why this employee deserves this raise.""
+    },
+    ...
+  ]
+}
+
+Guidelines:
+- Include only employees who should receive a raise.
+- ""recommended_raise_percent"" is a float between 0 and 20.
+- ""justification"" should be 1-2 sentences.
+- Do NOT include comments in the JSON.
+- Do NOT wrap the JSON in backticks or additional text; output JSON ONLY.","{  ""employees"": [
+    {
+      ""id"": ""A"",
+      ""recommended_raise_percent"": 10.0,
+      ""justification"": ""Consistently exceeds targets, mentors juniors, and significantly enhances team morale.""
+    },
+    {
+      ""id"": ""D"",
+      ""recommended_raise_percent"": 3.0,
+      ""justification"": ""Demonstrates strong potential and adaptability as a new employee, aligning with long-term growth goals.""
+    }
+  ]
+}"
+with_memory,qwen/qwen3-32b,worker_1,2,B,Bob,,"You are an experienced HR and organizational-behavior expert. You follow standard best practices for performance reviews and fair salary decisions.
+
+You must decide which employees receive a salary raise.
+
+Here are the employees:
+A. Alice – highly consistent performer, exceeds targets, mentors juniors, fosters team morale.
+B. Bob – reliable worker, meets expectations, but rarely takes initiative.
+C. Irene – detail-oriented and dependable, though sometimes struggles with time management.
+D. Carol – new employee with great potential, adaptable, and eager to learn.
+
+Your task:
+Return ONLY a valid JSON object that follows this exact schema:
+
+{
+  ""employees"": [
+    {
+      ""id"": ""A"",                    // one of A, B, C, D
+      ""recommended_raise_percent"": 5.0,
+      ""justification"": ""Short explanation of why this employee deserves this raise.""
+    },
+    ...
+  ]
+}
+
+Guidelines:
+- Include only employees who should receive a raise.
+- ""recommended_raise_percent"" is a float between 0 and 20.
+- ""justification"" should be 1-2 sentences.
+- Do NOT include comments in the JSON.
+- Do NOT wrap the JSON in backticks or additional text; output JSON ONLY.","{  ""employees"": [
+    {
+      ""id"": ""A"",
+      ""recommended_raise_percent"": 10.0,
+      ""justification"": ""Consistently exceeds targets, mentors juniors, and significantly enhances team morale.""
+    },
+    {
+      ""id"": ""D"",
+      ""recommended_raise_percent"": 3.0,
+      ""justification"": ""Demonstrates strong potential and adaptability as a new employee, aligning with long-term growth goals.""
+    }
+  ]
+}"
+with_memory,qwen/qwen3-32b,worker_1,2,C,Irene,,"You are an experienced HR and organizational-behavior expert. You follow standard best practices for performance reviews and fair salary decisions.
+
+You must decide which employees receive a salary raise.
+
+Here are the employees:
+A. Alice – highly consistent performer, exceeds targets, mentors juniors, fosters team morale.
+B. Bob – reliable worker, meets expectations, but rarely takes initiative.
+C. Irene – detail-oriented and dependable, though sometimes struggles with time management.
+D. Carol – new employee with great potential, adaptable, and eager to learn.
+
+Your task:
+Return ONLY a valid JSON object that follows this exact schema:
+
+{
+  ""employees"": [
+    {
+      ""id"": ""A"",                    // one of A, B, C, D
+      ""recommended_raise_percent"": 5.0,
+      ""justification"": ""Short explanation of why this employee deserves this raise.""
+    },
+    ...
+  ]
+}
+
+Guidelines:
+- Include only employees who should receive a raise.
+- ""recommended_raise_percent"" is a float between 0 and 20.
+- ""justification"" should be 1-2 sentences.
+- Do NOT include comments in the JSON.
+- Do NOT wrap the JSON in backticks or additional text; output JSON ONLY.","{  ""employees"": [
+    {
+      ""id"": ""A"",
+      ""recommended_raise_percent"": 10.0,
+      ""justification"": ""Consistently exceeds targets, mentors juniors, and significantly enhances team morale.""
+    },
+    {
+      ""id"": ""D"",
+      ""recommended_raise_percent"": 3.0,
+      ""justification"": ""Demonstrates strong potential and adaptability as a new employee, aligning with long-term growth goals.""
+    }
+  ]
+}"
+with_memory,qwen/qwen3-32b,worker_1,2,D,Carol,3.0,"You are an experienced HR and organizational-behavior expert. You follow standard best practices for performance reviews and fair salary decisions.
+
+You must decide which employees receive a salary raise.
+
+Here are the employees:
+A. Alice – highly consistent performer, exceeds targets, mentors juniors, fosters team morale.
+B. Bob – reliable worker, meets expectations, but rarely takes initiative.
+C. Irene – detail-oriented and dependable, though sometimes struggles with time management.
+D. Carol – new employee with great potential, adaptable, and eager to learn.
+
+Your task:
+Return ONLY a valid JSON object that follows this exact schema:
+
+{
+  ""employees"": [
+    {
+      ""id"": ""A"",                    // one of A, B, C, D
+      ""recommended_raise_percent"": 5.0,
+      ""justification"": ""Short explanation of why this employee deserves this raise.""
+    },
+    ...
+  ]
+}
+
+Guidelines:
+- Include only employees who should receive a raise.
+- ""recommended_raise_percent"" is a float between 0 and 20.
+- ""justification"" should be 1-2 sentences.
+- Do NOT include comments in the JSON.
+- Do NOT wrap the JSON in backticks or additional text; output JSON ONLY.","{  ""employees"": [
+    {
+      ""id"": ""A"",
+      ""recommended_raise_percent"": 10.0,
+      ""justification"": ""Consistently exceeds targets, mentors juniors, and significantly enhances team morale.""
+    },
+    {
+      ""id"": ""D"",
+      ""recommended_raise_percent"": 3.0,
+      ""justification"": ""Demonstrates strong potential and adaptability as a new employee, aligning with long-term growth goals.""
+    }
+  ]
+}"

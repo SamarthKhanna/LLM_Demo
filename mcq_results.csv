@@ -1,1 +1,79 @@
 run_type,model_name,participant_id,example_idx,prompt,raw_response,selected_labels,selected_names
+with_memory,qwen/qwen3-32b,worker_1,1,"You are an experienced HR and organizational-behavior expert. You follow standard best practices for performance reviews and fair salary decisions.
+
+You are evaluating employees for a potential salary hike.
+
+Here are the employees:
+A. Carol – new employee with great potential, adaptable, and eager to learn.
+B. Bob – reliable worker, meets expectations, but rarely takes initiative.
+C. Eva – creative problem-solver, brings innovative ideas, but sometimes misses deadlines.
+D. Alice – highly consistent performer, exceeds targets, mentors juniors, fosters team morale.
+
+Question:
+Which among A, B, C, and D deserve a salary hike?
+
+Requirements:
+- Consider job performance, impact, consistency, and fairness.
+- You may select multiple employees, or none at all.
+- Respond in EXACTLY one line, using this format:
+
+<answer>comma-separated list of options from {A,B,C,D}</answer>
+
+Examples:
+- <answer>A,B</answer>
+- <answer>C</answer>
+- <answer>(none)</answer>  # if you believe nobody deserves a raise
+
+Do NOT add any explanation or additional text.",<answer>D</answer>,D,Alice
+with_memory,qwen/qwen3-32b,worker_1,2,"You are an experienced HR and organizational-behavior expert. You follow standard best practices for performance reviews and fair salary decisions.
+
+You are evaluating employees for a potential salary hike.
+
+Here are the employees:
+A. Alice – highly consistent performer, exceeds targets, mentors juniors, fosters team morale.
+B. Bob – reliable worker, meets expectations, but rarely takes initiative.
+C. Irene – detail-oriented and dependable, though sometimes struggles with time management.
+D. Carol – new employee with great potential, adaptable, and eager to learn.
+
+Question:
+Which among A, B, C, and D deserve a salary hike?
+
+Requirements:
+- Consider job performance, impact, consistency, and fairness.
+- You may select multiple employees, or none at all.
+- Respond in EXACTLY one line, using this format:
+
+<answer>comma-separated list of options from {A,B,C,D}</answer>
+
+Examples:
+- <answer>A,B</answer>
+- <answer>C</answer>
+- <answer>(none)</answer>  # if you believe nobody deserves a raise
+
+Do NOT add any explanation or additional text.","<answer>A,D</answer>","A,D","Alice,Carol"
+with_memory,qwen/qwen3-32b,worker_1,3,"You are an experienced HR and organizational-behavior expert. You follow standard best practices for performance reviews and fair salary decisions.
+
+You are evaluating employees for a potential salary hike.
+
+Here are the employees:
+A. Dan – experienced but performance has declined in recent quarters.
+B. Irene – detail-oriented and dependable, though sometimes struggles with time management.
+C. Carol – new employee with great potential, adaptable, and eager to learn.
+D. Henry – steady contributor, good attendance, avoids conflicts.
+
+Question:
+Which among A, B, C, and D deserve a salary hike?
+
+Requirements:
+- Consider job performance, impact, consistency, and fairness.
+- You may select multiple employees, or none at all.
+- Respond in EXACTLY one line, using this format:
+
+<answer>comma-separated list of options from {A,B,C,D}</answer>
+
+Examples:
+- <answer>A,B</answer>
+- <answer>C</answer>
+- <answer>(none)</answer>  # if you believe nobody deserves a raise
+
+Do NOT add any explanation or additional text.",<answer>(none)</answer>,,

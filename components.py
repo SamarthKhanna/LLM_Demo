@@ -95,8 +95,8 @@ class GeminiLLM:
         )
 
         # Normal path: just use response.text
-        if response.text is not None:
-            return response.text
+        # if response.text is not None:
+        #     return response.text
 
         # Fallback: manually assemble visible text from candidates/parts
         pieces: list[str] = []

@@ -276,9 +276,9 @@ def call_free_flow_once(
     free_prompt = prompt_gen.free_flow_criteria()
     for i in range(3):
         try:
-            # raw, thoughts = llm.generate(free_prompt, history=history)
-            response = llm.generate(free_prompt, history=history)
-            print(response)
+            raw, thoughts = llm.generate(free_prompt, history=history)
+            # response = llm.generate(free_prompt, history=history)
+            # print(response)
             break
         except Exception as e:
             if i == 2:
@@ -376,6 +376,19 @@ def run_independent_sampling(
       - MCQ + JSON results are logged to CSV files.
     """
     prompt_gen = PromptGenerator()
+
+    try:
+        free_prompt, free_raw, free_thoughts = call_free_flow_once(
+            llm, prompt_gen, history=None
+        )
+    except Exception as e:
+        print(f"Error during free-flow call: {e}")
+        return
+
+    print("Free-flow prompt:\n", free_prompt)
+    print("Model response (free-flow):\n", free_raw)
+    print("Thoughts:", free_thoughts)
+    print()
 
     # 2) For each example, MCQ + JSON with NO history
     for idx, employees in enumerate(examples, start=1):
@@ -483,6 +496,10 @@ def run_sampling_with_memory(
                 mcq_prompt, mcq_raw, mcq_thoughts, mcq_parsed = call_mcq_once(
                     llm, prompt_gen, employees, history=participant.history
                 )
+                # response = call_mcq_once(
+                #     llm, prompt_gen, employees, history=participant.history
+                # )
+                # print(response)
             except Exception as e:
                 print(f"Error during MCQ call for {participant.id}, example {idx}: {e}")
                 continue
@@ -594,9 +611,9 @@ if __name__ == "__main__":
     gemini_llm = GeminiLLM(config=config, api_key=GEMINI_KEY)
 
     print("\n================ GEMINI: Independent sampling ================\n")
-    run_independent_sampling(gemini_llm, examples_to_use)
+    # run_independent_sampling(gemini_llm, examples_to_use)
 
-    # print("\n================ GEMINI: Sampling with memory ================\n")
+    print("\n================ GEMINI: Sampling with memory ================\n")
     # run_sampling_with_memory(gemini_llm, examples_to_use, num_participants=2)
 
     # ----------------------------------------------------------------
@@ -622,4 +639,4 @@ if __name__ == "__main__":
     # run_independent_sampling(groq_llm, examples_to_use)
 
     # print("\n================ GROQ: Sampling with memory ==================\n")
-    # run_sampling_with_memory(groq_llm, examples_to_use, num_participants=2)
+    run_sampling_with_memory(groq_llm, examples_to_use, num_participants=2)
